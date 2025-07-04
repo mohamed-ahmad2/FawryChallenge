@@ -32,13 +32,13 @@ The system allows:
 
 ```text
 ** Shipment notice **
-TV					15000g
-Cheese				2000g
+TV        15000g
+Cheese    2000g
 Total package weight 17.0kg
 
 ** Checkout receipt **
-1x TV						3000.0
-2x Cheese					40.0
+1x TV						          3000.0
+2x Cheese				          40.0
 5x Mobile Scratch Card		50.0
 ----------------------
 Subtotal		3090.0
