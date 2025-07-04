@@ -1,13 +1,19 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.fawrychallenge;
 
-/**
- *
- * @author mosa
- */
+import java.util.HashMap;
+import java.util.Map;
+
 public class Customer {
+    private Map<Product, Integer> cart = new HashMap<>();
+    private double balance;
+    
+    public void add(Product product, int quantity) {
+        if (product != null && quantity <= product.getQuantity()) {
+            cart.merge(product, quantity, Integer::sum);
+        } else {
+            System.out.println("Cannot add product: not enough stock.");
+        }
+    }
+    
     
 }
