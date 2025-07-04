@@ -1,6 +1,6 @@
 package com.mycompany.fawrychallenge;
 
-public class Product {
+public class Product implements ShippableProduct {
     private String name;
     private double price, shippingFees, weight;;
     private int quantity;
@@ -16,6 +16,7 @@ public class Product {
         this.weight = weight;
     }
 
+    @Override
     public String getName() { 
         return name; 
     }
@@ -62,6 +63,7 @@ public class Product {
         this.shippingFees = shippingFees;
     }
 
+    @Override
     public double getWeight() {
         return shippable ? weight : 0.0;
     }

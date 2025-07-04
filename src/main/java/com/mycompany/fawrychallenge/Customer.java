@@ -1,6 +1,7 @@
 package com.mycompany.fawrychallenge;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Customer {
@@ -58,13 +59,23 @@ public class Customer {
     }
 
     
-    private void printDetailsForCheckout(double subtotal, double shippingFees, double totalWeight, double total, double balance) {
-        System.out.println("Order Subtotal: " + subtotal);
-        System.out.println("Shipping Fees: " + shippingFees);
-        System.out.println("Total Shipping Weight: " + totalWeight + " kg");
-        System.out.println("Total Paid: " + total);
-        System.out.println("Remaining Balance: " + balance);
+   private void printDetailsForCheckout(double subtotal, double shippingFees, double total)   {
+        System.out.println("** Checkout receipt **");
+
+        for (var item : cart.entrySet()) {
+            Product product = item.getKey();
+            int quantity = item.getValue();
+            double price = product.getPrice() * quantity;
+
+            System.out.println(quantity + "x " + product.getName() + "\t\t" +  price);
+        }
+
+        System.out.println("----------------------");
+        System.out.println("Subtotal\t\t" +  subtotal);
+        System.out.println("Shipping\t\t" +  shippingFees);
+        System.out.println("Amount\t\t\t" +  total);
     }
+
 
 
     
@@ -74,6 +85,7 @@ public class Customer {
         double subtotal = 0.0;
         double shippingFees = 0.0;
         double totalWeight = 0.0;
+        Map<String, Double> shippableItems = new LinkedHashMap<>();
 
         for (var item : cart.entrySet()) {
             Product product = item.getKey();
@@ -87,12 +99,15 @@ public class Customer {
             if (product.isShippable()) {
                 shippingFees += product.getShippingFees() * quantity;
                 totalWeight += product.getWeight() * quantity;
+
+                double productWeightGrams = product.getWeight() * quantity * 1000;
+                shippableItems.merge(product.getName(), productWeightGrams, Double::sum);
             }
         }
 
         double total = subtotal + shippingFees;
 
-        updateBalance(total);
+        if (!updateBalance(total)) return;
 
         for (var item : cart.entrySet()) {
             Product product = item.getKey();
@@ -100,8 +115,9 @@ public class Customer {
             product.setQuantity(product.getQuantity() - quantity);
         }
 
-        printDetailsForCheckout(subtotal, shippingFees, totalWeight, total, balance);
-        
+        ShippingService.send(shippableItems, totalWeight * 1000);
+        printDetailsForCheckout(subtotal, shippingFees, total);
+
         cart.clear();
     }
 }
