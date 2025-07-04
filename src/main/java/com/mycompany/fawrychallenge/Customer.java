@@ -6,6 +6,12 @@ import java.util.Map;
 public class Customer {
     private Map<Product, Integer> cart = new HashMap<>();
     private double balance;
+
+    public Customer(double balance) {
+        this.balance = balance;
+    }
+    
+    
     
     public void add(Product product, int quantity) {
         if (product != null && quantity <= product.getQuantity()) {
@@ -40,6 +46,26 @@ public class Customer {
         }
         return true;
     }
+    
+    private boolean updateBalance(double total) {
+        if (balance < total) {
+            System.out.println("Insufficient balance");
+            return false;
+        }
+
+        balance -= total;
+        return true;
+    }
+
+    
+    private void printDetailsForCheckout(double subtotal, double shippingFees, double totalWeight, double total, double balance) {
+        System.out.println("Order Subtotal: " + subtotal);
+        System.out.println("Shipping Fees: " + shippingFees);
+        System.out.println("Total Shipping Weight: " + totalWeight + " kg");
+        System.out.println("Total Paid: " + total);
+        System.out.println("Remaining Balance: " + balance);
+    }
+
 
     
     public void checkout() {
@@ -66,12 +92,7 @@ public class Customer {
 
         double total = subtotal + shippingFees;
 
-        if (balance < total) {
-            System.out.println("Insufficient balance");
-            return;
-        }
-
-        balance -= total;
+        updateBalance(total);
 
         for (var item : cart.entrySet()) {
             Product product = item.getKey();
@@ -79,15 +100,8 @@ public class Customer {
             product.setQuantity(product.getQuantity() - quantity);
         }
 
-        System.out.println("Order Subtotal: " + subtotal);
-        System.out.println("Shipping Fees: " + shippingFees);
-        System.out.println("Total Shipping Weight: " + totalWeight + " kg");
-        System.out.println("Total Paid: " + total);
-        System.out.println("Remaining Balance: " + balance);
-
+        printDetailsForCheckout(subtotal, shippingFees, totalWeight, total, balance);
+        
         cart.clear();
     }
-
-
-
 }
